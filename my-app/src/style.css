@@ -1,0 +1,20 @@
+/* glob  al */
+* {
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+}
+*:focus {
+  outline: none;
+}
+.signup-parent-div {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 500px;
+}
+.signup-parent-div form {
+    border-radius: 10px;
+}
