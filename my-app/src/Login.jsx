@@ -1,49 +1,33 @@
 import React, { useState } from "react";
 import axios from "axios";
-export function Signup() {
-  const [name, setName] = useState("");
+
+export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [passR, setPassR] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true); // New state variable for email validation
   const [flag, setFlag] = useState(true);
   const [emailError, setEmailError] = useState("");
   const isPasswordValid = pass.length >= 8;
-  const isPasswordMatch = pass === passR;
-async function handleSubmit(e) {
-  e.preventDefault();
-  setSubmitted(true);
-  try {
-    if (
-      isPasswordValid &&
-      isPasswordMatch &&
-      name.length > 2 &&
-      isEmailValid &&
-      flag
-    ) {
-      setFlag(false);
-      let res = await axios.post("http://127.0.0.1:8000/api/register", {
-        name: name,
-        email: email,
-        password: pass,
-        password_confirmation: passR,
-      });
-      console.log(res); // Log the response to see what's returned
-      if (res.status=== 200) {
-        window.localStorage.setItem("email", email)
-        window.location.pathname = "";
-      } else {
-        console.log("Form submission failed. Unexpected response status.");
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitted(true);
+    try {
+      if (isPasswordValid && isEmailValid && flag) {
+        setFlag(false);
+        let res = await axios.post("http://127.0.0.1:8000/api/login", {
+          email: email,
+          password: pass,
+        });
+        if (res.status === 200) {
+          localStorage.setItem("email",email)
+          window.location.pathname = ''
+        }
       }
-    } else {
-      console.log("Form submission failed. Please check the input fields.");
+    } catch (error) {
+      setEmailError(error.response.status);
     }
-  } catch (error) {
-    console.error("Error during form submission:", error);
-    setEmailError(error.response ? error.response.status : "Unknown error");
   }
-}
 
   // Function to validate email
   const validateEmail = (email) => {
@@ -54,27 +38,12 @@ async function handleSubmit(e) {
   return (
     <div className="container signup-parent-div">
       <h2 style={{ textAlign: "center" }} className="mb-4">
-        Signup
+        Login
       </h2>
       <form
         onSubmit={handleSubmit}
         className="signup-form shadow-lg p-4 btn-outline-primary needs-validation"
       >
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          {name.length < 2 && submitted && (
-            <div className="invalid-feedback d-block">Name is not valid</div>
-          )}
-        </div>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
             Email address
@@ -121,27 +90,8 @@ async function handleSubmit(e) {
             </div>
           )}
         </div>
-        <div className="mb-3">
-          <label htmlFor="confirm-pass" className="form-label">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            className={`form-control ${
-              submitted && (!isPasswordMatch || !isPasswordValid)
-                ? "is-invalid"
-                : ""
-            }`}
-            id="confirm-pass"
-            value={passR}
-            onChange={(e) => setPassR(e.target.value)}
-          />
-          {submitted && !isPasswordMatch && (
-            <div className="invalid-feedback">Passwords do not match</div>
-          )}
-        </div>
         <button type="submit" className="btn btn-primary">
-          Register
+          Login
         </button>
       </form>
     </div>
