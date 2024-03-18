@@ -10,6 +10,9 @@
 *:focus {
   outline: none;
 }
+a {
+  text-decoration: none;
+}
 .signup-parent-div {
   padding-top: 30px;
   padding-bottom: 30px;
@@ -70,3 +73,5 @@ nav .navbar-nav a {
     margin-left: 10px;
   }
 }
+
+/*  */

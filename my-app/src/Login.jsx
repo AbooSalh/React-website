@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -20,8 +19,8 @@ export default function Login() {
           password: pass,
         });
         if (res.status === 200) {
-          localStorage.setItem("email",email)
-          window.location.pathname = ''
+          localStorage.setItem("email", email);
+          window.location.pathname = "";
         }
       }
     } catch (error) {

@@ -1,0 +1,19 @@
+.table-parent table {
+  margin-top: 10px;
+  width: 96%;
+  margin: 20px auto;
+  table-layout: fixed;
+}
+.table-parent thead th {
+  background-color: #6daabb;
+}
+.table-parent table thead {
+  text-align: center;
+}
+.table-parent table th,
+.table-parent table td {
+  text-align: center;
+}
+.table-parent table td {
+  border-left: 1px solid black;
+}

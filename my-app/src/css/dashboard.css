@@ -1,0 +1,26 @@
+/* top-bar */
+.top-bar {
+  border-bottom: 1px solid #ccc;
+  box-shadow: 1px 1px 10px 1px rgb(187, 184, 184);
+}
+aside {
+  padding: 20px;
+  border-right: 1px solid #cbc9c9;
+  width: 20%;
+  min-height: 100vh;
+}
+.item-link {
+  color: black;
+  font-size: 30px;
+  transition: background-color 0.3s;
+  padding: 0px 10px;
+  border-radius: 10px;
+}
+
+.item-link svg {
+  margin-right: 15px;
+}
+.item-link:hover ,
+.item-link.active {
+  background-color: #ccc;
+}
