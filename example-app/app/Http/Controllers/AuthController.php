@@ -25,6 +25,18 @@ class AuthController extends Controller
         $obj = User::where('id', $id)->get();
         return $obj;
     }
+    public function updateUser(StoreUserRequest $request)
+    {
+        $request->validated($request->all());
+        $user = User::where('id', $request->id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+        return $this->sucess([
+            'user' => $user,
+        ]);
+    }
 
     public function remove(Request $request)
     {

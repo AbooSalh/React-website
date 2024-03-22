@@ -6,7 +6,7 @@
 aside {
   padding: 20px;
   border-right: 1px solid #cbc9c9;
-  width: 20%;
+  width: 275px;
   min-height: 100vh;
 }
 .item-link {
@@ -15,12 +15,31 @@ aside {
   transition: background-color 0.3s;
   padding: 0px 10px;
   border-radius: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
-.item-link svg {
-  margin-right: 15px;
-}
-.item-link:hover ,
+.item-link:hover,
 .item-link.active {
   background-color: #ccc;
+}
+a {
+  text-decoration: none;
+}
+@media (max-width: 991px) {
+  .item-link svg {
+    margin-right: 0;
+  }
+  .item-link {
+    padding: 10px;
+    justify-content: start;
+  }
+  .item-link span {
+    display: none;
+  }
+  aside {
+    width: fit-content;
+  }
 }

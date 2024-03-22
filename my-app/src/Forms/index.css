@@ -16,7 +16,7 @@ a {
 .signup-parent-div {
   padding-top: 30px;
   padding-bottom: 30px;
-  width: 500px;
+  width: 500px !important;
 }
 .signup-parent-div form {
   border-radius: 10px;
@@ -73,5 +73,4 @@ nav .navbar-nav a {
     margin-left: 10px;
   }
 }
-
 /*  */

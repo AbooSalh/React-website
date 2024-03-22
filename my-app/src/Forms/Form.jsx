@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-export function Signup() {
+import "./index.css";
+export default function Form(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -9,52 +10,63 @@ export function Signup() {
   const [isEmailValid, setIsEmailValid] = useState(true); // New state variable for email validation
   const [flag, setFlag] = useState(true);
   const [emailError, setEmailError] = useState("");
+  const [redirect, setRedirect] = useState(false);
   const isPasswordValid = pass.length >= 8;
   const isPasswordMatch = pass === passR;
-async function handleSubmit(e) {
-  e.preventDefault();
-  setSubmitted(true);
-  try {
-    if (
-      isPasswordValid &&
-      isPasswordMatch &&
-      name.length > 2 &&
-      isEmailValid &&
-      flag
-    ) {
-      setFlag(false);
-      let res = await axios.post("http://127.0.0.1:8000/api/register", {
-        name: name,
-        email: email,
-        password: pass,
-        password_confirmation: passR,
-      });
-      console.log(res); // Log the response to see what's returned
-      if (res.status=== 200) {
-        window.localStorage.setItem("email", email)
-        window.location.pathname = "";
+  useEffect(() => {
+    setName(props.name || ""); // Set a default value if props.name is undefined
+    setEmail(props.email || "");
+  }, [props.email, props.name]);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitted(true);
+    try {
+      if (
+        isPasswordValid &&
+        isPasswordMatch &&
+        name.length > 2 &&
+        isEmailValid &&
+        flag
+      ) {
+        setFlag(false);
+        let res = await axios.post(
+          `http://127.0.0.1:8000/api/${props.endPoint}`,
+          {
+            name: name,
+            email: email,
+            password: pass,
+            password_confirmation: passR,
+          }
+        );
+        console.log(res); // Log the response to see what's returned
+        if (res.status === 200) {
+          if (props.hasLocalStorage) {
+            window.localStorage.setItem("email", email);
+          }
+          window.location.pathname = `/${
+            redirect ? props.navigate : "dashboard/users/create"
+          }`;
+        } else {
+          console.log("Form submission failed. Unexpected response status.");
+        }
       } else {
-        console.log("Form submission failed. Unexpected response status.");
+        console.log("Form submission failed. Please check the input fields.");
       }
-    } else {
-      console.log("Form submission failed. Please check the input fields.");
+    } catch (error) {
+      console.error("Error during form submission:", error);
+      setEmailError(error.response ? error.response.status : "Unknown error");
     }
-  } catch (error) {
-    console.error("Error during form submission:", error);
-    setEmailError(error.response ? error.response.status : "Unknown error");
   }
-}
 
   // Function to validate email
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
-
   return (
     <div className="container signup-parent-div">
       <h2 style={{ textAlign: "center" }} className="mb-4">
-        Signup
+        {props.submitBtn + " " + (props.name ? props.name : "")}
       </h2>
       <form
         onSubmit={handleSubmit}
@@ -140,8 +152,22 @@ async function handleSubmit(e) {
             <div className="invalid-feedback">Passwords do not match</div>
           )}
         </div>
+        {props.enableRedirect && (
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              role="switch"
+              id="flexSwitchCheckDefault"
+              onClick={() => setRedirect(redirect ? false : true)}
+            />
+            <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
+              Redirect
+            </label>
+          </div>
+        )}
         <button type="submit" className="btn btn-primary">
-          Register
+          {props.submitBtn}
         </button>
       </form>
     </div>
