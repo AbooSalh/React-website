@@ -6,10 +6,11 @@
 aside {
   padding: 20px;
   border-right: 1px solid #cbc9c9;
-  width: 275px;
+  width: fit-content;
   min-height: 100vh;
 }
 .item-link {
+  display: flex;
   color: black;
   font-size: 30px;
   transition: background-color 0.3s;
@@ -35,11 +36,15 @@ a {
   .item-link {
     padding: 10px;
     justify-content: start;
+    width: 60px;
   }
   .item-link span {
     display: none;
   }
   aside {
     width: fit-content;
+  }
+  .item-link span {
+    display: none;
   }
 }

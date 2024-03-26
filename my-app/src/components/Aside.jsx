@@ -5,7 +5,7 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 export default function Aside() {
   return (
     <aside style={{width:"275px"}}>
-      <NavLink activeClassName="active" to="/dashboard/users" className="item-link d-flex">
+      <NavLink activeclassname="active" to="/dashboard/users" className="item-link d-flex">
         <FontAwesomeIcon icon={faUser} />
         <span>Users</span>
       </NavLink>

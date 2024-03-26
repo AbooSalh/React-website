@@ -58,7 +58,7 @@ export default function Users() {
   ));
 
   return (
-    <div className="table-parent" style={{ width: "100%", height: "100%" }}>
+    <div className="table-parent" style={{ width: "78%", height: "100%" }}>
       {loading ? (
         <div
           className="d-flex justify-content-center align-items-center"

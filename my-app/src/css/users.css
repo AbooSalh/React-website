@@ -16,4 +16,5 @@
 }
 .table-parent table td {
   border-left: 1px solid black;
+  width: fit-content;
 }
