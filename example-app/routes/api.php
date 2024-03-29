@@ -21,35 +21,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Protected Routes
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+    // Users
+    Route::prefix('user')->controller(AuthController::class)->group(function () {
+        Route::get('show', 'getAll');
+        Route::get('showbyid/{id}', 'getbyId');
+        Route::post('update/{id}', 'updateUser');
+        Route::post('create', 'register');
+        Route::delete('delete/{user_id}', 'remove');
+    });
+});
+
+
 // Public Routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-
-
-// Users
-
-Route::prefix('user')->controller(AuthController::class)->group(function () {
-    Route::get('show', 'getAll');
-    Route::get('showbyid/{id}', 'getbyId');
-    Route::post('update/{id}', 'updateUser');
-    Route::Post('create' , 'register');
-    Route::delete('delete/{user_id}', 'remove');
-});
-
-// Products
-
-Route::prefix('product')->controller(ProductsController::class)->group(function () {
-    Route::post('create', 'create');
-    Route::get('show', 'index');
-    Route::get('showbyid/{id}', 'getbyId');
-    Route::delete('delete/{id}', 'destroy');
-});
-
-
-
-// Protected Routes
-
-Route::group(['middleware' => ['auth:sanctum']], function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-});

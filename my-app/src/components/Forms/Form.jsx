@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import "./index.css";
+import { User } from "../../Home/Auth/context/UserContext";
+import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 export default function Form(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -10,13 +13,19 @@ export default function Form(props) {
   const [isEmailValid, setIsEmailValid] = useState(true); // New state variable for email validation
   const [flag, setFlag] = useState(true);
   const [emailError, setEmailError] = useState("");
-  const [redirect, setRedirect] = useState(false);
+  const [redirect, setRedirect] = useState(true);
   const isPasswordValid = pass.length >= 8;
   const isPasswordMatch = pass === passR;
+  const userNow = useContext(User);
+  const nav = useNavigate();
+  const cookie = new Cookies()
+
+  console.log(userNow);
   useEffect(() => {
     setName(props.name || ""); // Set a default value if props.name is undefined
     setEmail(props.email || "");
   }, [props.email, props.name]);
+
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitted(true);
@@ -28,7 +37,7 @@ export default function Form(props) {
         isEmailValid &&
         flag
       ) {
-        setFlag(false);
+        setFlag(redirect ? false : true);
         let res = await axios.post(
           `http://127.0.0.1:8000/api/${props.endPoint}`,
           {
@@ -38,23 +47,28 @@ export default function Form(props) {
             password_confirmation: passR,
           }
         );
-        console.log(res); // Log the response to see what's returned
+        const token = res.data.data.token;
+        const userDetails = res.data.data.user;
+        props.enableCookie && (cookie.set("Bearer" , token))
+        userNow.setAuth({ token, userDetails });
         if (res.status === 200) {
           if (props.hasLocalStorage) {
             window.localStorage.setItem("email", email);
           }
-          window.location.pathname = `/${
-            redirect ? props.navigate : "dashboard/users/create"
-          }`;
-        } else {
-          console.log("Form submission failed. Unexpected response status.");
+          const checked = redirect;
+          setRedirect(false);
+          setTimeout(() => {
+            checked ? nav(props.navigate) : nav("");
+          }, 500);
         }
-      } else {
-        console.log("Form submission failed. Please check the input fields.");
       }
     } catch (error) {
       console.error("Error during form submission:", error);
       setEmailError(error.response ? error.response.status : "Unknown error");
+      setFlag(true);
+      if (error.response.status === 422) {
+        setEmailError(true);
+      }
     }
   }
 
@@ -63,6 +77,7 @@ export default function Form(props) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
+
   return (
     <div className="container signup-parent-div">
       <h2 style={{ textAlign: "center" }} className="mb-4">
@@ -159,9 +174,13 @@ export default function Form(props) {
               type="checkbox"
               role="switch"
               id="flexSwitchCheckDefault"
-              onClick={() => setRedirect(redirect ? false : true)}
+              checked={redirect}
+              onChange={(e) => setRedirect(e.target.checked)}
             />
-            <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
+            <label
+              className="form-check-label"
+              htmlFor="flexSwitchCheckDefault"
+            >
               Redirect
             </label>
           </div>

@@ -1,4 +1,4 @@
-import Form from "../Forms/Form";
+import Form from "../components/Forms/Form";
 
 export default function CreateUser() {
   return (

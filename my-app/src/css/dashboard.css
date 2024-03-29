@@ -42,7 +42,7 @@ a {
     display: none;
   }
   aside {
-    width: fit-content;
+    width: fit-content !important;
   }
   .item-link span {
     display: none;

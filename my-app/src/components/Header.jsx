@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom";
 
 export default function Header() {
-  function handleLogout() {
-    localStorage.removeItem("email");
-    window.location.pathname = "/";
-  }
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container">
@@ -49,36 +45,32 @@ export default function Header() {
               </Link>
             </li>
             <div className="nav-item login-links d-flex flex-sm-column flex-md-column flex-lg-row align-items-center">
-              {!window.localStorage.getItem("email") ? (
-                <>
-                  <Link
-                    to="/register"
-                    className="nav-link btn btn-light p-1"
-                    href="#"
-                  >
-                    Signup
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="nav-link btn btn-light p-1"
-                    href="#"
-                  >
-                    Login
-                  </Link>
-                </>
-              ) : (
+              
                 <Link
+                  to="/register"
                   className="nav-link btn btn-light p-1"
-                  onClick={handleLogout}
+                  href="#"
                 >
-                  logout
+                  Signup
                 </Link>
-              )}
+                <Link
+                  to="/login"
+                  className="nav-link btn btn-light p-1"
+                  href="#"
+                >
+                  Login
+                </Link>
+              
+              <Link
+                className="nav-link btn btn-light p-1"
+
+              >
+                logout
+              </Link>
             </div>
           </ul>
         </div>
       </div>
-      
     </nav>
   );
 }

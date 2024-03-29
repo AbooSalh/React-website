@@ -1,27 +1,37 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { User } from "./context/UserContext";
+import Cookies from "universal-cookie";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true); // New state variable for email validation
-  const [flag, setFlag] = useState(true);
   const [emailError, setEmailError] = useState("");
+  const user = useContext(User);
+  const nav = useNavigate();
+
+  // cookie
+  const cookie = new Cookies();
+
   const isPasswordValid = pass.length >= 8;
+
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitted(true);
     try {
-      if (isPasswordValid && isEmailValid && flag) {
-        setFlag(false);
+      if (isPasswordValid && isEmailValid) {
         let res = await axios.post("http://127.0.0.1:8000/api/login", {
           email: email,
           password: pass,
         });
-        if (res.status === 200) {
-          localStorage.setItem("email", email);
-          window.location.pathname = "";
-        }
+        const token = res.data.data.token;
+        cookie.set("Bearer", token);
+        const userDetails = res.data.data.user;
+        user.setAuth({ token, userDetails });
+        nav("/dashboard");
       }
     } catch (error) {
       setEmailError(error.response.status);
@@ -86,6 +96,11 @@ export default function Login() {
           {submitted && !isPasswordValid && (
             <div className="invalid-feedback">
               Password must be at least 8 characters long
+            </div>
+          )}
+          {emailError === 401 && (
+            <div className="invalid-feedback d-block">
+              The password is or email is incorrect
             </div>
           )}
         </div>
